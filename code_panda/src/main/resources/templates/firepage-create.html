@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/bootstrap-5.0.2-dist/css/bootstrap.css}"/>
+    <script th:src="@{/bootstrap-5.0.2-dist/js/bootstrap.bundle.js}"
+            src="../static/bootstrap-5.0.2-dist/js/bootstrap.bundle.js"></script>
+</head>
+<body>
+<div class="form__input-img">
+    <div id="dnd" class="preview form-control" style="margin-top: 5px">
+        <input type="hidden" id="thumbnailURL" />
+        <img id="image" src="" class="preview-img form-control"/>
+    </div>
+</div>
+<script src="https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.3.1/firebase-analytics.js"></script>
+<script type="module">
+    function renderBaseImg() {
+        let path = document.getElementById("thumbnailURL").value;
+        document.getElementById("image").src = path;
+        document.getElementById("image").alt = "image";
+    }
+
+    renderBaseImg();
+    const dndElement = document.querySelector('#dnd');
+    const resultElement = document.querySelector('.preview');
+    const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
+    dndElement.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        this.classList.add('drag-over');
+    })
+    dndElement.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        this.classList.remove('drag-over');
+    })
+    dndElement.addEventListener('drop', function (e) {
+        e.preventDefault()
+        this.classList.remove('drag-over')
+        const files = e.dataTransfer.files;
+        const file = files[0];
+        renderPreviewImage(file)
+    })
+
+    function renderPreviewImage(file) {
+        const fileType = file['type']
+        if (!validImageTypes.includes(fileType)) {
+            resultElement.insertAdjacentHTML('beforeend',
+                '<span class="preview-image"> Vui long chon anh </span>')
+            return
+        }
+        const fileReader = new FileReader()
+        fileReader.readAsDataURL(file)
+        fileReader.onload = function () {
+            const url = fileReader.result;
+            document.getElementById("image").src = url;
+            document.getElementById("image").alt = file.name;
+            pushImage(file)
+        }
+    }
+
+    //paste here your copied configuration code
+    const firebaseConfig = {
+        apiKey: "AIzaSyA3-3S4WQ1eAKCxOyxbHn6ZKU1lwecHf98",
+        authDomain: "codepanda-e078b.firebaseapp.com",
+        projectId: "codepanda-e078b",
+        storageBucket: "codepanda-e078b.appspot.com",
+        messagingSenderId: "971552543159",
+        appId: "1:971552543159:web:2e33c51785ece05be75832",
+        measurementId: "G-TVZ85TX7QW"
+    };
+    firebase.initializeApp(firebaseConfig);
+
+    function pushImage(file) {
+        let random = Math.random().toString(36).substring(7);
+        let storageRef = firebase.storage().ref("user/" + random);
+        let task = storageRef.put(file);
+        task.on('state_changed', function progress(snapshot) {
+            let percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            uploader.value = percentage;
+            if (percentage === 100) {
+                document.getElementById('submit').removeAttribute('disable');
+            } else {
+                document.getElementById('submit').setAttribute('disable', 'disable');
+            }
+        });
+        task.then(snapshot => snapshot.ref.getDownloadURL()).then(
+            url => {
+                document.getElementById('thumbnailURL').value = url;
+            });
+    }
+</script>
+</body>
+</html>

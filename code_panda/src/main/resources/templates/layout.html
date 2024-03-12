@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Code Panda</title>
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" th:href="@{/bootstrap-5.0.2-dist/css/bootstrap.css}"/>
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" th:href="@{/images/icons/favicon.png}"/>
+
+
+  <!-- Google Web Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Handlee&family=Nunito&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+  <!-- Flaticon Font -->
+  <link href="../lib/flaticon/font/flaticon.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../static/lib/flaticon/font/_flaticon.scss">
+  <!-- Libraries Stylesheet -->
+  <link href="../lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../static/lib/owlcarousel/assets/owl.carousel.min.css">
+
+  <link href="../lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../static/lib/lightbox/css/lightbox.min.css">
+
+  <!-- Customized Bootstrap Stylesheet -->
+  <link href="../css/style.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../static/css/style.css">
+
+</head>
+<body>
+<!-- Navbar Start -->
+<div th:fragment="header" class="container-fluid bg-light position-relative shadow">
+  <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0 px-lg-5">
+    <a href="" class="navbar-brand font-weight-bold text-secondary" style="font-size: 50px;">
+      <i class="flaticon-043-teddy-bear"></i>
+      <span class="text-primary">Code Panda</span>
+    </a>
+    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+      <div class="navbar-nav font-weight-bold mx-auto py-0">
+        <a href="/home" class="nav-item nav-link active">Trang chủ</a>
+        <a href="/about" class="nav-item nav-link">Tài liệu</a>
+        <a href="/class" class="nav-item nav-link">Lớp</a>
+        <a href="/team" class="nav-item nav-link">Giảng viên</a>
+        <a href="/gallery" class="nav-item nav-link">Học viên</a>
+        <div class="nav-item dropdown">
+          <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Trang</a>
+          <div class="dropdown-menu rounded-0 m-0">
+            <a href="/blog" class="dropdown-item">Blog Grid</a>
+            <a href="/single" class="dropdown-item">Blog Detail</a>
+          </div>
+        </div>
+        <a href="/contact" class="nav-item nav-link">Contact</a>
+      </div>
+      <a th:if="${#request.userPrincipal == null}" style="margin: 5px" href="" class="btn btn-primary px-4">Đăng Nhập</a>
+      <a th:if="${#request.userPrincipal == null}" style="margin: 5px" href="" class="btn btn-primary px-4">Đăng ký</a>
+
+    </div>
+  </nav>
+</div>
+<!-- Navbar End -->
+
+
+<!--content start-->
+<div class="container-fluid" style="min-height: 678px">
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+<!-- Footer Start -->
+<div th:fragment="footer" class="container-fluid bg-secondary text-white mt-1 py-5 px-sm-3 px-md-5" style="margin-top: 0">
+  <div class="row pt-1">
+    <div class="col-lg-4 col-md-6 mb-5">
+      <a href="" class="navbar-brand font-weight-bold text-primary m-0 mb-4 p-0" style="font-size: 40px; line-height: 40px;">
+        <i class="flaticon-043-teddy-bear"></i>
+        <span class="text-white">Code Panda</span>
+      </a>
+      <p>Đến với chung tôi các bạn sẽ trở thành developer sau lịch trình học nhanh nhất là 6 tháng.
+        <br>
+      Được đào tạo với hinh thức code bootcamp các bạn sẽ được cọ xát và thu lại được nhưng kinh nghiệm đáng giá
+      </p>
+      <div class="d-flex justify-content-start mt-1">
+        <a class="btn btn-outline-primary rounded-circle text-center mr-2 px-0"
+           style="width: 38px; height: 38px;" href="#"><i class="fab fa-twitter"></i></a>
+        <a class="btn btn-outline-primary rounded-circle text-center mr-2 px-0"
+           style="width: 38px; height: 38px;" href="#"><i class="fab fa-facebook-f"></i></a>
+        <a class="btn btn-outline-primary rounded-circle text-center mr-2 px-0"
+           style="width: 38px; height: 38px;" href="#"><i class="fab fa-linkedin-in"></i></a>
+        <a class="btn btn-outline-primary rounded-circle text-center mr-2 px-0"
+           style="width: 38px; height: 38px;" href="#"><i class="fab fa-instagram"></i></a>
+      </div>
+    </div>
+    <div class="col-lg-4 col-md-6 mb-1">
+      <h3 class="text-primary mb-4">Liên hệ</h3>
+      <div class="d-flex">
+        <h4 class="fa fa-map-marker-alt text-primary"></h4>
+        <div class="pl-3">
+          <h5 class="text-white">Địa chỉ</h5>
+          <p>280 Trần Hưng Đạo</p>
+        </div>
+      </div>
+      <div class="d-flex">
+        <h4 class="fa fa-envelope text-primary"></h4>
+        <div class="pl-3">
+          <h5 class="text-white">Email</h5>
+          <p>codepanda@gmail.com</p>
+        </div>
+      </div>
+      <div class="d-flex">
+        <h4 class="fa fa-phone-alt text-primary"></h4>
+        <div class="pl-3">
+          <h5 class="text-white">Điện thoại</h5>
+          <p>+012 345 67890</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 col-md-6 mb-5">
+      <h3 class="text-primary mb-4">Các liên kết</h3>
+      <div class="d-flex flex-column justify-content-start">
+        <a class="text-white mb-2" href="/home"><i class="fa fa-angle-right mr-2"></i>Trang chủ</a>
+        <a class="text-white mb-2" href="/about"><i class="fa fa-angle-right mr-2"></i>Thông tin thêm</a>
+        <a class="text-white mb-2" href="/module"><i class="fa fa-angle-right mr-2"></i>Các khóa học</a>
+        <a class="text-white mb-2" href="/team"><i class="fa fa-angle-right mr-2"></i>Giảng viên</a>
+        <a class="text-white mb-2" href="/blog"><i class="fa fa-angle-right mr-2"></i>Diễn đàn</a>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid pt-5" style="border-top: 1px solid rgba(23, 162, 184, .2);;">
+    <p class="m-0 text-center text-white">
+      &copy; <a class="text-primary font-weight-bold" href="#">Your Site Name</a>. All Rights Reserved. Designed
+      by
+      <a class="text-primary font-weight-bold" href="https://htmlcodex.com">HTML Codex</a>
+    </p>
+  </div>
+</div>
+<!-- Footer End -->
+
+
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+<script src="../lib/easing/easing.min.js"></script>
+<script src="../lib/owlcarousel/owl.carousel.min.js"></script>
+<script src="../lib/isotope/isotope.pkgd.min.js"></script>
+<script src="../lib/lightbox/js/lightbox.min.js"></script>
+<!-- Contact Javascript File -->
+<script src="../mail/jqBootstrapValidation.min.js"></script>
+<script src="../mail/contact.js"></script>
+<!-- Template Javascript -->
+<script src="../js/main.js"></script>
+<!--offline-->
+<script src="../../static/mail/contact.js"></script>
+<script src="../../static/mail/jqBootstrapValidation.min.js"></script>
+<script src="../../static/lib/lightbox/js/lightbox.min.js"></script>
+<script src="../../static/lib/isotope/isotope.pkgd.min.js"></script>
+<script src="../../static/lib/owlcarousel/owl.carousel.min.js"></script>
+<script src="../../static/lib/easing/easing.min.js"></script>
+<script src="../../static/js/main.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script th:src="@{/bootstrap-5.0.2-dist/js/bootstrap.bundle.js}"
+        src="../static/bootstrap-5.0.2-dist/js/bootstrap.bundle.js"></script>
+
+</body>
+</html>

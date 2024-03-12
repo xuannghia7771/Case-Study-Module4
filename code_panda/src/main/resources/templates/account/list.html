@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>list</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" th:href="@{/images/icons/favicon.png}"/>
+    <link rel="stylesheet" th:href="@{/bootstrap-5.0.2-dist/css/bootstrap.css}"/>
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Handlee&family=Nunito&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Flaticon Font -->
+    <link href="lib/flaticon/font/flaticon.css" rel="stylesheet">
+    <link rel="stylesheet" href="../static/lib/flaticon/font/_flaticon.scss">
+    <!-- Libraries Stylesheet -->
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../static/lib/owlcarousel/assets/owl.carousel.min.css">
+
+    <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../static/lib/lightbox/css/lightbox.min.css">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/style.css">
+
+    <!-- Icon Font -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
+    <!--    toast-->
+    <script th:src="@{/js/main.js}"></script>
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    <style>
+        .toast-container {
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+        }
+    </style>
+
+</head>
+<body>
+<div th:replace="landing_page::header"></div>
+<!--toast-->
+<div class="toast-container">
+    <div style="border-radius: 20%;border:2px solid #17a2b8;" id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div style="background-color: #00394f;border-radius: 22%;border-top-color:#17a2b8;border: 2px " class="toast-header justify-content-center">
+            <h4 style="color: white;text-align: center">
+                Thông báo
+            </h4>
+        </div>
+        <div class="toast-body text-info justify-content-center" style="align-content: center">
+            <p style="text-align: center; color: green" th:text="${message}">
+            </p>
+        </div>
+    </div>
+</div>
+<!--end toast-->
+
+<div class="container-fluid" style="min-height: 550px;margin-top: 30px">
+    <h1 style="text-align: center">Quản lý Account </h1>
+
+
+    <nav class="navbar navbar-inverse">
+        <div class="navbar-form navbar-left mb-3">
+            <a th:href="@{/account/add}">
+                <button title="Thêm mới account"
+                        class="btn btn-primary">
+                    <i class="fa-solid fa-plus"></i></button>
+            </a>
+        </div>
+        <form th:action="@{/account}" method="get" class="navbar-form navbar-right">
+            <div class="d-flex justify-content-end">
+                <div class="input-group mb-3">
+                    <input id="search-input1" th:value="${keyword}" name="keyword" type="search"
+                           class="form-control"
+                           placeholder="Email"/>
+                    <div class="mb-3 ml-2">
+                        <button id="search-button" type="submit" class="btn btn-primary">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </nav>
+
+
+    <table class="table table-hover">
+        <tr>
+            <th>STT</th>
+            <th>Email</th>
+            <th>Vai trò</th>
+            <th>Chức năng</th>
+        </tr>
+        <tr th:each="account,loop : ${accounts}">
+            <td style="width:10%" th:text="${loop.count}"></td>
+            <td style="width:40%" th:text="${account.email}"></td>
+            <td style="width: 40%">
+                <span th:switch="${account.roleName}">
+                    <span th:case="'ROLE_ADMIN'" th:text="'Giám Đốc'"></span>
+                    <span th:case="'ROLE_TEACHER'" th:text="'Giảng Viên'"></span>
+                    <span th:case="'ROLE_STUDENT'" th:text="'Học Viên'"></span>
+                </span>
+            </td>
+            <td style="width:10%">
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-danger"
+                        data-bs-toggle="modal"
+                        data-bs-target="#exampleModal"
+                        th:attr="onclick=|confirmDelete(${account.id},'${account.email}')|">
+                    <i class="fa-solid fa-lock"></i>
+                </button>
+            </td>
+        </tr>
+    </table>
+
+    <!--   phan trang-->
+
+    <div th:if="${accounts.totalPages>1}" class="col-md-12 mb-4 mt-3">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center mb-0">
+                <li th:class="${!accounts.hasPrevious()}?'page-item disabled' : 'page-item'">
+                    <a class="page-link"
+                       th:href="@{/account(page=0,keyword=${keyword})}">
+                        <small>
+                            <i class="fa-solid fa-backward-fast"></i>
+                        </small>
+                    </a>
+                </li>
+                <li th:class="${!accounts.hasPrevious()}?'page-item disabled' : 'page-item'">
+                    <a class="page-link"
+                       th:href="@{/account(page=${(accounts.number)-1},keyword=${keyword})}">
+                        <small>
+                            <i class="fa-solid fa-backward-step"></i>
+                        </small>
+                    </a>
+                </li>
+                <li class="page-item active">
+                    <a href="#" class="page-link">
+                        <span th:text="${accounts.number +1}"></span>/<span
+                            th:text="${accounts.totalPages}"></span>
+                    </a>
+                </li>
+                <li th:class="${!accounts.hasNext()}?'page-item disabled' : 'page-item'">
+                    <a class="page-link"
+                       th:href="@{/account(page=${(accounts.number)+1},keyword=${keyword})}">
+                        <small>
+                            <i class="fa-solid fa-forward-step"></i>
+                        </small>
+                    </a>
+                </li>
+                <li th:class="${!accounts.hasNext()}?'page-item disabled' : 'page-item'">
+                    <a class="page-link"
+                       th:href="@{/account(page=${(accounts.totalPages)-1},keyword=${keyword})}">
+                        <small>
+                            <i class="fa-solid fa-forward-fast"></i>
+                        </small>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<!-- Modal xóa-->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="/account/delete" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"><b>Vô hiệu hóa tài khoản</b></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Bạn muốn vô hiệu hóa tài khoản :
+                        <span id="usernameDelete"></span></p>
+                    <input type="text" hidden="hidden" name="deleteId" id="deleteId">
+                    <p style="color: red"><b>Lưu ý:</b> Hoạt động này không thể hoàn tác! </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Thoát</button>
+                    <button type="submit" class="btn btn-primary">Xác nhận</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div th:replace="layout::footer"></div>
+
+<!--===============================================================================================-->
+<script th:if="${message!=null}">
+    // toast
+    window.onload = function () {
+        let myAlert = document.getElementById('liveToast');//select id of toast
+        let bsAlert = new bootstrap.Toast(myAlert);//inizialize it
+        bsAlert.show();//show it
+    }
+</script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+<script src="lib/easing/easing.min.js"></script>
+
+<script src="lib/owlcarousel/owl.carousel.min.js"></script>
+
+<script src="lib/isotope/isotope.pkgd.min.js"></script>
+
+<script src="lib/lightbox/js/lightbox.min.js"></script>
+
+
+<!-- Contact Javascript File -->
+<script src="mail/jqBootstrapValidation.min.js"></script>
+<script src="mail/contact.js"></script>
+
+<!-- Template Javascript -->
+<script src="js/main.js"></script>
+<!--offline-->
+<script src="../static/mail/contact.js"></script>
+<script src="../static/mail/jqBootstrapValidation.min.js"></script>
+<script src="../static/lib/lightbox/js/lightbox.min.js"></script>
+<script src="../static/lib/isotope/isotope.pkgd.min.js"></script>
+<script src="../static/lib/owlcarousel/owl.carousel.min.js"></script>
+<script src="../static/lib/easing/easing.min.js"></script>
+<script src="../static/js/main.js"></script>
+<script th:src="@{/bootstrap-5.0.2-dist/js/bootstrap.bundle.js}"></script>
+<link th:href="@{/css/style.css}" rel="stylesheet">
+<script th:src="@{/js_login/main.js}"></script>
+
+<script>
+    function confirmDelete(id, name) {
+        document.getElementById("usernameDelete").innerText = name;
+        document.getElementById("deleteId").value = id;
+    }
+</script>
+</body>
+</html>

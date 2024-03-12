@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách phân công</title>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/bootstrap-5.0.2-dist/css/bootstrap.css}"/>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" th:href="@{/images/icons/favicon.png}"/>
+
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Handlee&family=Nunito&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Flaticon Font -->
+    <link href="../lib/flaticon/font/flaticon.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/lib/flaticon/font/_flaticon.scss">
+    <!-- Libraries Stylesheet -->
+    <link href="../lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/lib/owlcarousel/assets/owl.carousel.min.css">
+
+    <link href="../lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/lib/lightbox/css/lightbox.min.css">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="../css/style.css" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/style.css">
+    <style>
+        .toast-container {
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            min-width: 200px;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="landing_page::header"></div>
+
+<div style="min-height: 550px;margin-top: 30px" class="container-fluid">
+    <h1 style="text-align: center">Danh sách lịch phân công giảng dạy</h1>
+    <div class="col-12 d-flex">
+        <div class="col-3 col-lg-3">
+            <div class="card border-0">
+                <div class="card-header bg-secondary text-center p-4">
+                    <h3 class="text-white m-0">Phân công mới</h3>
+                </div>
+                <div class="card-body rounded-bottom bg-primary p-3">
+                    <form action="/assignment/create" method="get" th:object="${assignmentDto}">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" style="width: 30%">Giảng viên</span>
+                            <select th:field="*{teacher}" class="custom-select border-0 px-2" style="height: 47px;">
+                                <option th:each="t:${teacherLists}" th:value="${t.id}" th:text="${t.name}"></option>
+                            </select>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" style="width: 30%">Lớp</span>
+                            <select th:field="*{classes}" class="custom-select border-0 px-2" style="height: 47px;">
+                                <option th:each="c:${classesLists}" th:value="${c.id}" th:text="${c.name}"></option>
+                            </select>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" style="width: 30%">Vị trí</span>
+                            <select th:field="*{position}" class="custom-select border-0 px-2" style="height: 47px;">
+                                <option th:each="p:${positionLists}" th:value="${p.id}" th:text="${p.name}"></option>
+                            </select>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" style="width: 30%">Từ ngày</span>
+                            <input th:field="*{dateStart}" type="date" class="form-control border-0 p-2" placeholder="Your Name"
+                                   required="required"/>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" style="width: 30%">Đến ngày</span>
+                            <input th:field="*{dateEnd}" type="date" class="form-control border-0 p-2" placeholder="Your Name"
+                                   required="required"/>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <button class="btn btn-secondary border-0 py-2" type="submit">Xác Nhận
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-9 col-lg-9" style="min-height: 400px">
+            <nav class="navbar navbar-inverse d-flex justify-content-end">
+                <form th:action="@{/assignment/list(className=${className},teacherName=${teacherName},start=${start},end=${end})}"
+                      method="get" class="navbar-form navbar-right">
+                    <div class="d-flex justify-content-end col-12">
+                        <div class="input-group mb-3" style="width: 200px">
+                            <select id="search-input1" th:value="${className}" name="className" type="search"
+                                    class="custom-select border-1 px-2">
+                                <option value="">Tất cả lớp</option>
+                                <option th:each="cl:${classesLists}"
+                                        th:selected="${cl.name}==${className}"
+                                        th:text="${cl.name}" th:value="${cl.name}"></option>
+                            </select>
+                        </div>
+                        <div class="input-group mb-3" style="width: 200px">
+                            <select id="search-input2" type="search" th:value="${teacherName}" name="teacherName"
+                                    class="custom-select border-1 px-2">
+                                <option value="">Tất cả giảng viên</option>
+                                <option th:each="t:${teacherLists}"
+                                        th:selected="${t.name}==${teacherName}"
+                                        th:value="${t.name}" th:text="${t.name}"></option>
+                            </select>
+                        </div>
+                        <div class="input-group mb-3" style="width: 250px">
+                            <span class="input-group-text">Từ ngày</span>
+                            <input id="search-input3" type="date" th:value="${start}" name="start"
+                                   class="form-control border-1 p-2"/>
+                        </div>
+
+                        <div class="input-group mb-3" style="width: 250px">
+                            <span class="input-group-text">Đến ngày</span>
+                            <input id="search-input4" th:value="${end}" name="end" type="date"
+                                   class="form-control border-1 p-2"/>
+                        </div>
+                        <div class="mb-3 ml-2">
+                            <button id="search-button" type="submit" class="btn btn-primary">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </nav>
+            <div class="mt-3 mb-3" style="min-height:320px ">
+                <table class="table table-hover">
+                    <tr>
+                        <th>STT</th>
+                        <th>Giảng Viên</th>
+                        <th>Vị Trí</th>
+                        <th>Lớp</th>
+                        <th>Ngày Bắt Đầu</th>
+                        <th>Ngày Kết Thúc</th>
+                        <th>Chức Năng</th>
+                    </tr>
+                    <tr th:each="ass,status:${assignmentPage}">
+                        <td style="width: 5%" th:text="${status.count}"></td>
+                        <td style="width: 20%" th:text="${ass.getTeacher()}"></td>
+                        <td style="width: 10%" th:text="${ass.getPosition()}"></td>
+                        <td style="width: 15%" th:text="${ass.getClasses()}"></td>
+                        <td style="width: 15%" th:text="${#dates.format(ass.getStart(),'dd-MM-yyyy')}"></td>
+                        <td style="width: 15%" th:text="${#dates.format(ass.getEnd(),'dd-MM-yyyy')}"></td>
+                        <td style="width: 15%">
+                            <a th:href="@{/assignment/update(id=${ass.getId()})}">
+                                <button class="btn btn-primary">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                            </a>
+                            <!-- Button trigger modal -->
+                            <!--                    nếu role admin thêm vào  th:if="${a.role.roleName!='ROLE_ADMIN'}" -->
+                            <button type="button" class="btn btn-danger"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal"
+                                    th:attr="onclick=|confirmDelete(${ass.getId()},'${ass.getTeacher()}')|">
+                                <i class="fa-regular fa-trash-can"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div th:if="${assignmentPage.totalPages>1}" class="col-md-12 mb-3 mt-3">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center mb-0">
+                        <li th:class="${!assignmentPage.hasPrevious()}?'page-item disabled' : 'page-item'">
+                            <a class="page-link"
+                               th:href="@{/assignment/list(page=0,className=${className},teacherName=${teacherName},start=${start},end=${end})}">
+                                <small>
+                                    <i class="fa-solid fa-backward-fast"></i>
+                                </small>
+                            </a>
+                        </li>
+                        <li th:class="${!assignmentPage.hasPrevious()}?'page-item disabled' : 'page-item'">
+                            <a class="page-link"
+                               th:href="@{/assignment/list(page=${(assignmentPage.number)-1},className=${className},teacherName=${teacherName},start=${start},end=${end})}">
+                                <small>
+                                    <i class="fa-solid fa-backward-step"></i>
+                                </small>
+                            </a>
+                        </li>
+                        <li class="page-item active">
+                            <a href="#" class="page-link">
+                                <span th:text="${assignmentPage.number +1}"></span>/<span
+                                    th:text="${assignmentPage.totalPages}"></span>
+                            </a>
+                        </li>
+                        <li th:class="${!assignmentPage.hasNext()}?'page-item disabled' : 'page-item'">
+                            <a class="page-link"
+                               th:href="@{/assignment/list(page=${(assignmentPage.number)+1},className=${className},teacherName=${teacherName},start=${start},end=${end})}">
+                                <small>
+                                    <i class="fa-solid fa-forward-step"></i>
+                                </small>
+                            </a>
+                        </li>
+                        <li th:class="${!assignmentPage.hasNext()}?'page-item disabled' : 'page-item'">
+                            <a class="page-link"
+                               th:href="@{/assignment/list(page=${(assignmentPage.totalPages)-1},className=${className},teacherName=${teacherName},start=${start},end=${end})}">
+                                <small>
+                                    <i class="fa-solid fa-forward-fast"></i>
+                                </small>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+
+<!-- Modal xóa-->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="/assignment/delete" method="get">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"><b>Thông báo</b></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Bạn muốn xóa bảng phân công của :<br/>
+                        giảng viên :
+                        <span id="teacherName"></span> không ???</p>
+                    <input type="text" hidden="hidden" name="idDelete" id="idDelete">
+                    <p style="color: red"><b>Lưu ý:</b> Hoạt động này không thể hoàn tác! </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Thoát</button>
+                    <button type="submit" class="btn btn-primary">Xác nhận</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-------------------------Toast-------------------------------------------------------------->
+<div class="toast-container">
+    <div style="border-radius: 20%;border:2px solid #17a2b8;" id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div style="background-color: #00394f;border-radius: 22%;border-top-color:#17a2b8;border: 2px " class="toast-header justify-content-center">
+            <h4 style="color: white;text-align: center">
+                Thông báo
+            </h4>
+        </div>
+        <div class="toast-body text-info justify-content-center" style="align-content: center">
+            <p style="text-align: center" th:text="${msg}">
+            </p>
+        </div>
+    </div>
+</div>
+<!-------------------------End Toast-------------------------------------------------------------->
+<div th:replace="layout::footer"></div>
+</body>
+
+
+<script th:if="${msg!=null}">
+    // toast
+    window.onload = function () {
+        let myAlert = document.getElementById('liveToast');//select id of toast
+        let bsAlert = new bootstrap.Toast(myAlert);//inizialize it
+        bsAlert.show();//show it
+    }
+</script>
+<script>
+    //delete modal
+    function confirmDelete(id,name) {
+        document.getElementById("teacherName").innerHTML = name;
+        document.getElementById("idDelete").value = id;
+    }
+</script>
+
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+<script src="../lib/easing/easing.min.js"></script>
+<script src="../lib/owlcarousel/owl.carousel.min.js"></script>
+<script src="../lib/isotope/isotope.pkgd.min.js"></script>
+<script src="../lib/lightbox/js/lightbox.min.js"></script>
+<!-- Contact Javascript File -->
+<script src="../mail/jqBootstrapValidation.min.js"></script>
+<script src="../mail/contact.js"></script>
+<!-- Template Javascript -->
+<script src="../js/main.js"></script>
+<script th:src="@{/js/main.js}"></script>
+<!--offline-->
+<script src="../../static/mail/contact.js"></script>
+<script src="../../static/mail/jqBootstrapValidation.min.js"></script>
+<script src="../../static/lib/lightbox/js/lightbox.min.js"></script>
+<script src="../../static/lib/isotope/isotope.pkgd.min.js"></script>
+<script src="../../static/lib/owlcarousel/owl.carousel.min.js"></script>
+<script src="../../static/lib/easing/easing.min.js"></script>
+<script src="../../static/js/main.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script th:src="@{/bootstrap-5.0.2-dist/js/bootstrap.bundle.js}"
+        src="../static/bootstrap-5.0.2-dist/js/bootstrap.bundle.js"></script>
+</html>

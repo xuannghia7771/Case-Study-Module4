@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Thêm Mới Học Phần</title>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/bootstrap-5.0.2-dist/css/bootstrap.css}"/>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" th:href="@{/images/icons/favicon.png}"/>
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Handlee&family=Nunito&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Flaticon Font -->
+    <link href="../lib/flaticon/font/flaticon.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/lib/flaticon/font/_flaticon.scss">
+    <!-- Libraries Stylesheet -->
+    <link href="../lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/lib/owlcarousel/assets/owl.carousel.min.css">
+
+    <link href="../lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/lib/lightbox/css/lightbox.min.css">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="../css/style.css" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/style.css">
+</head>
+<body>
+<div th:replace="landing_page::header"></div>
+<div class="back" style="margin-top: 30px">
+    <a th:href="@{/module}">
+        <button class="btn btn-primary"><i class="fa-solid fa-arrow-left"></i></button>
+    </a>
+</div>
+<div class="container-fluid" style="min-height: 500px" align="center">
+    <div class="bg-light p-5" style="max-width: 40%">
+        <h2 class="mb-4" style="text-align: center">Thêm Mới Module</h2>
+        <form th:action="@{/module/save}" method="post" th:object="${mo}">
+            <div class="form-group">
+                <label for="name">Tên Module<span style="color: red">*</span>:</label>
+                <input type="text" class="form-control" id="name" th:field="*{name}" required>
+            </div>
+            <div class="form-group">
+                <label for="interval">Thời Lượng Module <span style="color: red">*</span>:</label>
+                <input type="text" class="form-control" id="interval" th:field="*{interval}" required>
+            </div>
+            <div class="form-group">
+                <label  class="form-label" for="document">Tên Tài Liệu <span style="color: red">*</span>:</label>
+                <select class="form-select" th:field="*{document}" id="document">
+                    <option value="">Chọn Tài Liệu</option>
+                    <th:block th:each="d:${documentList}">
+                        <option th:value="${d.id}" th:text="${d.name}"></option>
+                    </th:block>
+                </select>
+            </div>
+            <div style="margin-top: 80px" class="form-group mb-0">
+                <input type="submit" value="Lưu" class="btn btn-primary px-3">
+            </div>
+        </form>
+    </div>
+</div>
+<div th:replace="layout::footer"></div>
+</body>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+<script src="../lib/easing/easing.min.js"></script>
+<script src="../lib/owlcarousel/owl.carousel.min.js"></script>
+<script src="../lib/isotope/isotope.pkgd.min.js"></script>
+<script src="../lib/lightbox/js/lightbox.min.js"></script>
+<!-- Contact Javascript File -->
+<script src="../mail/jqBootstrapValidation.min.js"></script>
+<script src="../mail/contact.js"></script>
+<!-- Template Javascript -->
+<script src="../js/main.js"></script>
+<!--offline-->
+<script src="../../static/mail/contact.js"></script>
+<script src="../../static/mail/jqBootstrapValidation.min.js"></script>
+<script src="../../static/lib/lightbox/js/lightbox.min.js"></script>
+<script src="../../static/lib/isotope/isotope.pkgd.min.js"></script>
+<script src="../../static/lib/owlcarousel/owl.carousel.min.js"></script>
+<script src="../../static/lib/easing/easing.min.js"></script>
+<script src="../../static/js/main.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script th:src="@{/bootstrap-5.0.2-dist/js/bootstrap.bundle.js}"
+        src="../static/bootstrap-5.0.2-dist/js/bootstrap.bundle.js"></script>
+</html>

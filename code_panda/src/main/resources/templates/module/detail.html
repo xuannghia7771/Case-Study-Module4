@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chi Tiết Học Phần</title>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/bootstrap-5.0.2-dist/css/bootstrap.css}"/>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" th:href="@{/images/icons/favicon.png}"/>
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Handlee&family=Nunito&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Flaticon Font -->
+    <link href="../lib/flaticon/font/flaticon.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/lib/flaticon/font/_flaticon.scss">
+    <!-- Libraries Stylesheet -->
+    <link href="../lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/lib/owlcarousel/assets/owl.carousel.min.css">
+
+    <link href="../lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/lib/lightbox/css/lightbox.min.css">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="../css/style.css" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/style.css">
+</head>
+<body>
+<div th:replace="landing_page::header"></div>
+<div class="back" style="margin-top: 30px">
+    <a th:href="@{/module}">
+        <button class="btn btn-primary"><i class="fa-solid fa-arrow-left"></i></button>
+    </a>
+</div>
+<!--<table>-->
+<!--    <tr>-->
+<!--        <th>STT</th>-->
+<!--        <th>Module Name</th>-->
+<!--        <th>Module Interval</th>-->
+<!--        <th>Document Name</th>-->
+<!--    </tr>-->
+<!--    <tr th:each="var,status:${mo}">-->
+<!--        <td th:text="${status.count}"></td>-->
+<!--        <td th:text="${mo.name}"></td>-->
+<!--        <td th:text="${mo.interval}"></td>-->
+<!--        <td th:text="${mo.document.name}"></td>-->
+<!--    </tr>-->
+<!--</table>-->
+
+<div class="container-fluid" style="min-height: 500px" align="center">
+    <div class="bg-light p-5" style="max-width: 40%">
+        <h2 class="mb-4" style="text-align: center">Thông Tin Tài Liệu</h2>
+        <form th:each="var,status:${mo}">
+            <div class="form-group">
+                <label for="name"><b>Tên Module</b></label>
+                <span type="text" class="form-control" id="name" th:text="${mo.name}" disabled readonly></span>
+            </div>
+            <div class="form-group">
+                <label for="interval"><b>Thời Lượng Module</b></label>
+                <span type="text" class="form-control" id="interval" th:text="${mo.interval}" disabled
+                      readonly></span>
+            </div>
+            <div class="form-group">
+                <label for="document"><b>Tên Tài Liệu</b></label>
+                <span type="text" class="form-control" id="document" th:text="${mo.document.name}" disabled readonly></span>
+            </div>
+        </form>
+    </div>
+</div>
+<!-------------------------Toast-------------------------------------------------------------->
+<div class="toast-container">
+    <div style="border-radius: 20%;border:2px solid #17a2b8;" id="liveToast" class="toast" role="alert"
+         aria-live="assertive" aria-atomic="true">
+        <div style="background-color: #00394f;border-radius: 22%;border-top-color:#17a2b8;border: 2px "
+             class="toast-header justify-content-center">
+            <h4 style="color: white;text-align: center">
+                Thông báo
+            </h4>
+        </div>
+        <div class="toast-body text-info justify-content-center" style="align-content: center">
+            <p style="text-align: center" th:text="${msg}">
+            </p>
+        </div>
+    </div>
+</div>
+<!-------------------------End Toast-------------------------------------------------------------->
+<div th:replace="layout::footer"></div>
+</body>
+
+
+<script th:if="${msg!=null}">
+    // toast
+    window.onload = function () {
+        let myAlert = document.getElementById('liveToast');//select id of toast
+        let bsAlert = new bootstrap.Toast(myAlert);//inizialize it
+        bsAlert.show();//show it
+    }
+</script>
+
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+<script src="../lib/easing/easing.min.js"></script>
+<script src="../lib/owlcarousel/owl.carousel.min.js"></script>
+<script src="../lib/isotope/isotope.pkgd.min.js"></script>
+<script src="../lib/lightbox/js/lightbox.min.js"></script>
+<!-- Contact Javascript File -->
+<script src="../mail/jqBootstrapValidation.min.js"></script>
+<script src="../mail/contact.js"></script>
+<!-- Template Javascript -->
+<script src="../js/main.js"></script>
+<script th:src="@{/js/main.js}"></script>
+<!--offline-->
+<script src="../../static/mail/contact.js"></script>
+<script src="../../static/mail/jqBootstrapValidation.min.js"></script>
+<script src="../../static/lib/lightbox/js/lightbox.min.js"></script>
+<script src="../../static/lib/isotope/isotope.pkgd.min.js"></script>
+<script src="../../static/lib/owlcarousel/owl.carousel.min.js"></script>
+<script src="../../static/lib/easing/easing.min.js"></script>
+<script src="../../static/js/main.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script th:src="@{/bootstrap-5.0.2-dist/js/bootstrap.bundle.js}"
+        src="../static/bootstrap-5.0.2-dist/js/bootstrap.bundle.js"></script>
+</html>

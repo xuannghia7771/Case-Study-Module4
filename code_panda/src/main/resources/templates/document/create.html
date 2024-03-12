@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Thêm Mới Tài Liệu</title>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/bootstrap-5.0.2-dist/css/bootstrap.css}"/>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" th:href="@{/images/icons/favicon.png}"/>
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Handlee&family=Nunito&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Flaticon Font -->
+    <link href="../lib/flaticon/font/flaticon.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/lib/flaticon/font/_flaticon.scss">
+    <!-- Libraries Stylesheet -->
+    <link href="../lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/lib/owlcarousel/assets/owl.carousel.min.css">
+
+    <link href="../lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/lib/lightbox/css/lightbox.min.css">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="../css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/style.css">
+    <style>
+        .toast-container {
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+        }
+    </style>
+
+</head>
+<body>
+<div th:replace="landing_page::header"></div>
+<div class="back" style="margin-top: 30px">
+    <a th:href="@{/document}">
+        <button class="btn btn-primary"><i class="fa-solid fa-arrow-left"></i></button>
+    </a>
+</div>
+<div class="container-fluid" style="min-height: 500px" align="center">
+    <div class="bg-light p-5" style="max-width: 40%">
+        <h2 class="mb-4" style="text-align: center">Thêm Mới Tài Liệu</h2>
+        <form th:action="@{/document/save}" th:method="post" th:object="${documentDto}">
+            <div class="form-group">
+                <label for="name">Tên Tài Liệu <span style="color: red">*</span>:</label>
+                <input type="text" class="form-control" id="name" th:field="*{name}" ><br/>
+                <small style="color: red"
+                       th:if="${#fields.hasErrors('name')}"
+                       th:errors="*{name}"></small></td>
+            </div>
+            <div class="form-group">
+                <label for="description">Mô Tả Tài Liệu <span style="color: red">*</span>:</label>
+                <textarea type="text" class="form-control" id="description" th:field="*{description}"></textarea>
+                <small style="color: red" th:if="${#fields.hasErrors('description')}"
+                       th:errors="*{description}"></small>
+            </div>
+            <div class="form-group mb-0">
+                <input type="submit" value="Lưu" class="btn btn-primary px-3">
+            </div>
+        </form>
+    </div>
+</div>
+<!-------------------------Toast-------------------------------------------------------------->
+<div class="toast-container">
+    <div style="border-radius: 20%;border:2px solid #17a2b8;" id="liveToast" class="toast" role="alert"
+         aria-live="assertive" aria-atomic="true">
+        <div style="background-color: #00394f;border-radius: 22%;border-top-color:#17a2b8;border: 2px "
+             class="toast-header justify-content-center">
+            <h4 style="color: white;text-align: center">
+                Thông báo
+            </h4>
+        </div>
+        <div class="toast-body text-info justify-content-center" style="align-content: center">
+            <p style="text-align: center" th:text="${msg}">
+            </p>
+        </div>
+    </div>
+</div>
+<!-------------------------End Toast-------------------------------------------------------------->
+<div th:replace="layout::footer"></div>
+</body>
+
+
+<script th:if="${msg!=null}">
+    // toast
+    window.onload = function () {
+        let myAlert = document.getElementById('liveToast');//select id of toast
+        let bsAlert = new bootstrap.Toast(myAlert);//inizialize it
+        bsAlert.show();//show it
+    }
+</script>
+
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+<script src="../lib/easing/easing.min.js"></script>
+<script src="../lib/owlcarousel/owl.carousel.min.js"></script>
+<script src="../lib/isotope/isotope.pkgd.min.js"></script>
+<script src="../lib/lightbox/js/lightbox.min.js"></script>
+<!-- Contact Javascript File -->
+<script src="../mail/jqBootstrapValidation.min.js"></script>
+<script src="../mail/contact.js"></script>
+<!-- Template Javascript -->
+<script src="../js/main.js"></script>
+<!--offline-->
+<script src="../../static/mail/contact.js"></script>
+<script src="../../static/mail/jqBootstrapValidation.min.js"></script>
+<script src="../../static/lib/lightbox/js/lightbox.min.js"></script>
+<script src="../../static/lib/isotope/isotope.pkgd.min.js"></script>
+<script src="../../static/lib/owlcarousel/owl.carousel.min.js"></script>
+<script src="../../static/lib/easing/easing.min.js"></script>
+<script src="../../static/js/main.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script th:src="@{/bootstrap-5.0.2-dist/js/bootstrap.bundle.js}"
+        src="../static/bootstrap-5.0.2-dist/js/bootstrap.bundle.js"></script>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh Sách Học Sinh</title>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/bootstrap-5.0.2-dist/css/bootstrap.css}"/>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" th:href="@{/images/icons/favicon.png}"/>
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Handlee&family=Nunito&display=swap" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Flaticon Font -->
+    <link href="../lib/flaticon/font/flaticon.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/lib/flaticon/font/_flaticon.scss">
+    <!-- Libraries Stylesheet -->
+    <link href="../lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/lib/owlcarousel/assets/owl.carousel.min.css">
+
+    <link href="../lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/lib/lightbox/css/lightbox.min.css">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="../css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/style.css">
+    <style>
+        .toast-container {
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+        }
+        td{
+            text-align: center;
+        }
+        th{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="landing_page::header">
+
+</div>
+<div class="toast-container">
+    <div style="border-radius: 20%;border:2px solid #17a2b8;" id="liveToast" class="toast" role="alert"
+         aria-live="assertive" aria-atomic="true">
+        <div style="background-color: #00394f;border-radius: 22%;border-top-color:#17a2b8;border: 2px "
+             class="toast-header justify-content-center">
+            <h4 style="color: white;text-align: center">
+                Thông báo
+            </h4>
+        </div>
+        <div class="toast-body text-info justify-content-center" style="align-content: center">
+            <p style="text-align: center" th:text="${mess}">
+            </p>
+        </div>
+    </div>
+</div>
+<!-------------------------End Toast-------------------------------------------------------------->
+<!--content start-->
+<div class="container-fluid" style="min-height: 550px;margin-top: 30px">
+    <h1 style=" margin-top: 30px" align="center">Danh Sách Học Sinh</h1>
+    <nav class="navbar navbar-inverse">
+        <div class=" navbar-form navbar-left mb-3">
+            <a href="/student/add">
+                <button title="Thêm mới học sinh"
+                        class="btn btn-primary">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+            </a>
+        </div>
+        <form action="/student" method="get">
+            <div class="d-flex justify-content-end">
+                <div class="input-group mb-6">
+                    <input id="search-input1" th:value="${studentName}" name="studentName" type="search"
+                           class="form-control" placeholder="Tên học sinh"/>
+                </div>
+                <div class="mb-6 ml-2">
+                    <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+                </div>
+
+            </div>
+        </form>
+    </nav>
+    <table class="table table-hover">
+        <tr>
+            <th>STT</th>
+            <th>Tên</th>
+            <th>Giới Tính</th>
+            <th>CMND</th>
+            <th>Điện Thoại</th>
+            <th>Ngày Sinh</th>
+            <th>Lớp</th>
+            <td>Chức Năng</td>
+        </tr>
+        <tr th:each="student, status :${studentDtos}">
+            <td hidden="hidden" style="width: 10%" th:text="${student.getStudentId()}"></td>
+            <td style="width: 5%" th:text="${status.count}"></td>
+            <td style="width: 15%" th:text="${student.getStudentName()}"></td>
+            <td style="width: 5%">
+                <span th:if="${student.getStudentGender()}">Nam</span>
+                <span th:if="${!student.getStudentGender()}">Nữ</span>
+            </td>
+            <td style="width: 15%" th:text="${student.getStudentIdCard()}"></td>
+            <td style="width: 15%" th:text="${student.getStudentPhone()}"></td>
+            <td style="width: 15%" th:text="${#temporals.format(student.getStudentBirth(),'dd-MM-yyyy')}"></td>
+            <td style="width: 15%" th:text="${student.getClassName()}"></td>
+            <td hidden="hidden" style="width: 15%" th:text="${student.getStudentStatus()}"></td>
+            <td style="width: 15%">
+                <a th:href="@{/student/edit/(id=${student.getStudentId()})}">
+                    <button class="btn btn-primary">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </button>
+                </a>
+                <button type="button" class="btn btn-danger" th:attr="onclick=|showModal('${student.getStudentId()}')|">
+                    <i class="fa-regular fa-trash-can"></i>
+                </button>
+            </td>
+        </tr>
+    </table>
+
+
+
+    <div th:if="${studentDtos.totalPages>1}" class="col-md-12 mb-4 mt-3">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center mb-0">
+                <li th:class="${!studentDtos.hasPrevious()}?'page-item disabled' : 'page-item'">
+                    <a class="page-link"
+                       th:href="@{/student(page=0,studentName=${studentName})}">
+                        <small>
+                            <i class="fa-solid fa-backward-fast"></i>
+                        </small>
+                    </a>
+                </li>
+                <li th:class="${!studentDtos.hasPrevious()}?'page-item disabled' : 'page-item'">
+                    <a class="page-link"
+                       th:href="@{student(page=${(studentDtos.number)-1},studentName=${studentName})}">
+                        <small>
+                            <i class="fa-solid fa-backward-step"></i>
+                        </small>
+                    </a>
+                </li>
+                <li class="page-item active">
+                    <a href="#" class="page-link">
+                        <span th:text="${studentDtos.number +1}"></span>/<span
+                            th:text="${studentDtos.totalPages}"></span>
+                    </a>
+                </li>
+                <li th:class="${!studentDtos.hasNext()}?'page-item disabled' : 'page-item'">
+                    <a class="page-link"
+                       th:href="@{student(page=${studentDtos.number+1},studentName=${studentName})}">
+                        <small>
+                            <i class="fa-solid fa-forward-step"></i>
+                        </small>
+                    </a>
+                </li>
+                <li th:class="${!studentDtos.hasNext()}?'page-item disabled' : 'page-item'">
+                    <a class="page-link"
+                       th:href="@{student(page=${(studentDtos.totalPages)-1},studentName=${studentName})}">
+                        <small>
+                            <i class="fa-solid fa-forward-fast"></i>
+                        </small>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <form action="/student/delete" method="post">
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">DELETE STUDENT</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <input type="hidden" id="id" name="id">
+                    <div class="modal-body">
+                        Bạn có muốn xóa học sinh có code là <span id="idDelete"></span>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Huỷ</button>
+                        <button type="submit" class="btn btn-danger">Xác Nhận</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div th:replace="layout::footer">
+
+</div>
+</body>
+<script th:if="${mess!=null}">
+    // toast
+    window.onload = function () {
+        let myAlert = document.getElementById('liveToast');//select id of toast
+        let bsAlert = new bootstrap.Toast(myAlert);//inizialize it
+        bsAlert.show();//show it
+    }
+</script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+<script src="../lib/easing/easing.min.js"></script>
+
+<script src="../lib/owlcarousel/owl.carousel.min.js"></script>
+
+<script src="../lib/isotope/isotope.pkgd.min.js"></script>
+
+<script src="../lib/lightbox/js/lightbox.min.js"></script>
+
+
+<!-- Contact Javascript File -->
+<script src="../mail/jqBootstrapValidation.min.js"></script>
+<script src="../mail/contact.js"></script>
+
+<!-- Template Javascript -->
+<script src="../js/main.js"></script>
+<!--offline-->
+<script src="../../static/mail/contact.js"></script>
+<script src="../../static/mail/jqBootstrapValidation.min.js"></script>
+<script src="../../static/lib/lightbox/js/lightbox.min.js"></script>
+<script src="../../static/lib/isotope/isotope.pkgd.min.js"></script>
+<script src="../../static/lib/owlcarousel/owl.carousel.min.js"></script>
+<script src="../../static/lib/easing/easing.min.js"></script>
+<script src="../../static/js/main.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script th:src="@{/bootstrap-5.0.2-dist/js/bootstrap.bundle.js}"
+        src="../static/bootstrap-5.0.2-dist/js/bootstrap.bundle.js"></script>
+<script th:src="@{/js/main.js}"></script>
+<script>
+
+    function showModal(id) {
+        document.getElementById("idDelete").innerText = id;
+        document.getElementById("id").value = id;
+        $("#deleteModal").modal("show");
+    }
+</script>
+</html>

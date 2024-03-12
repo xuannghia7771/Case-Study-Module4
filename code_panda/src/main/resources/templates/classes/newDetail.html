@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chi Tiết</title>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/bootstrap-5.0.2-dist/css/bootstrap.css}"/>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" th:href="@{/images/icons/favicon.png}"/>
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Handlee&family=Nunito&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Flaticon Font -->
+    <link href="../lib/flaticon/font/flaticon.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/lib/flaticon/font/_flaticon.scss">
+    <!-- Libraries Stylesheet -->
+    <link href="../lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/lib/owlcarousel/assets/owl.carousel.min.css">
+
+    <link href="../lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/lib/lightbox/css/lightbox.min.css">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="../css/style.css" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/style.css">
+    <style>
+
+
+        td {
+            text-align: center;
+        }
+
+        th {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="landing_page::header">
+
+</div>
+<div class="container-fluid" style="margin-top: 30px"><a href="/classes" class="btn btn-primary"><i
+        class="fa-solid fa-arrow-left"></i></a></div>
+
+<div class="container-fluid" style="min-height: 550px;margin-top: 30px">
+    <h1 style="margin-top: 30px;" align="center">
+        Danh Sách Chi Tiết Học Sinh Trong Lớp
+    </h1>
+    <div class="row">
+        <div class="col-md-7">
+            <table class="table table-hover">
+                <tr>
+                    <th>STT</th>
+                    <th>Tên</th>
+                    <th>Giới Tính</th>
+                    <th>CMND</th>
+                    <th>Điện Thoại</th>
+                    <th>Ngày Sinh</th>
+                    <th>Lớp</th>
+                </tr>
+                <tr th:each="student, status :${studentDtoPage}">
+                    <td hidden="hidden" style="width: 10%" th:text="${student.getStudentId()}"></td>
+                    <td style="width: 10%" th:text="${status.count}"></td>
+                    <td style="width: 20%" th:text="${student.getStudentName()}"></td>
+                    <td style="width: 10%">
+                        <span th:if="${student.getStudentGender()}">Nam</span>
+                        <span th:if="${!student.getStudentGender()}">Nữ</span>
+                    </td>
+                    <td style="width: 15%" th:text="${student.getStudentIdCard()}"></td>
+                    <td style="width: 15%" th:text="${student.getStudentPhone()}"></td>
+                    <td style="width: 15%" th:text="${student.getStudentBirth()}"></td>
+                    <td style="width: 15%" th:text="${student.getClassName()}"></td>
+                </tr>
+            </table>
+            <!--phân trang-->
+            <div th:if="${studentDtoPage.totalPages>1}" class="col-md-12 mb-4 mt-3">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center mb-0">
+                        <li th:class="${!studentDtoPage.hasPrevious()}?'page-item disabled' : 'page-item'">
+                            <a class="page-link" th:href="@{/classes/listStudent(page=0,id = ${id})}">
+                                <small>
+                                    <i class="fa-solid fa-backward-fast"></i>
+                                </small>
+                            </a>
+                        </li>
+                        <li th:class="${!studentDtoPage.hasPrevious()}?'page-item disabled' : 'page-item'">
+                            <a class="page-link" th:href="@{/classes/listStudent(page=${(studentDtoPage.number)-1},id = ${id})}">
+                                <small>
+                                    <i class="fa-solid fa-backward-step"></i>
+                                </small>
+                            </a>
+                        </li>
+                        <li class="page-item active">
+                            <a class="page-link">
+                                <span th:text="${studentDtoPage.number +1}"></span>/<span
+                                    th:text="${studentDtoPage.totalPages}"></span>
+                            </a>
+                        </li>
+                        <li th:class="${!studentDtoPage.hasNext()}?'page-item disabled' : 'page-item'">
+                            <a class="page-link" th:href="@{/classes/listStudent(page=${(studentDtoPage.number)+1},id = ${id})}">
+                                <small>
+                                    <i class="fa-solid fa-forward-step"></i>
+                                </small>
+                            </a>
+                        </li>
+                        <li th:class="${!studentDtoPage.hasNext()}?'page-item disabled' : 'page-item'">
+                            <a class="page-link" th:href="@{/classes/listStudent(page=${(studentDtoPage.totalPages)-1},id = ${id})}">
+                                <small>
+                                    <i class="fa-solid fa-forward-fast"></i>
+                                </small>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+
+
+
+
+        </div>
+        <div class="col-md-1">
+            <button type="button" class="btn btn-secondary" data-bs-container="body" data-bs-toggle="popover"
+                    data-bs-placement="bottom" data-bs-content="Sỉ Số">
+          <span th:if="${ ! #lists.isEmpty(classesDto)}">Sỉ Số
+        <span th:text="${classesDto[0].getStudentCount()}"></span>
+    </span>
+            </button>
+        </div>
+        <div class="col-md-4">
+            <table  class="table table-hover">
+                <tr>
+                    <th>Tên Giáo Viên</th>
+                    <th>Chức Vụ</th>
+                </tr>
+                <th:block th:if="${classesDto.size() > 0}">
+                    <th:block th:each="classes, iterStat : ${classesDto}" th:if="${iterStat.index < 3}">
+                        <tr>
+                            <td class="table-info" th:text="${classes.getTeacherName()}"></td>
+                            <td class="table-info" th:text="${classes.getPositionName()}"></td>
+                        </tr>
+                    </th:block>
+                </th:block>
+            </table>
+        </div>
+    </div>
+</div>
+<div th:replace="layout::footer">
+
+</div>
+</body>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+<script src="../lib/easing/easing.min.js"></script>
+<script src="../lib/owlcarousel/owl.carousel.min.js"></script>
+<script src="../lib/isotope/isotope.pkgd.min.js"></script>
+<script src="../lib/lightbox/js/lightbox.min.js"></script>
+<!-- Contact Javascript File -->
+<script src="../mail/jqBootstrapValidation.min.js"></script>
+<script src="../mail/contact.js"></script>
+<!-- Template Javascript -->
+<script src="../js/main.js"></script>
+<script th:src="@{/js/main.js}"></script>
+<!--offline-->
+<script src="../../static/mail/contact.js"></script>
+<script src="../../static/mail/jqBootstrapValidation.min.js"></script>
+<script src="../../static/lib/lightbox/js/lightbox.min.js"></script>
+<script src="../../static/lib/isotope/isotope.pkgd.min.js"></script>
+<script src="../../static/lib/owlcarousel/owl.carousel.min.js"></script>
+<script src="../../static/lib/easing/easing.min.js"></script>
+<script src="../../static/js/main.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script th:src="@{/bootstrap-5.0.2-dist/js/bootstrap.bundle.js}"
+        src="../static/bootstrap-5.0.2-dist/js/bootstrap.bundle.js"></script>
+</html>

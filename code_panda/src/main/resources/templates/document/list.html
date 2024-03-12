@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh Sách Tài Liệu</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" th:href="@{/images/icons/favicon.png}"/>
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Handlee&family=Nunito&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Flaticon Font -->
+    <link href="lib/flaticon/font/flaticon.css" rel="stylesheet">
+    <link rel="stylesheet" href="../static/lib/flaticon/font/_flaticon.scss">
+    <!-- Libraries Stylesheet -->
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../static/lib/owlcarousel/assets/owl.carousel.min.css">
+
+    <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../static/lib/lightbox/css/lightbox.min.css">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css">
+    <style>
+        .toast-container {
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+        }
+    </style>
+
+</head>
+<body>
+<div th:replace="landing_page::header"></div>
+<div class="container-fluid">
+    <h1 style="text-align: center;margin-top: 30px">Danh Sách Tài Liệu</h1>
+    <nav class="navbar navbar-inverse">
+        <div class="navbar-form navbar-left mb-3">
+            <a th:href="@{/document/create}" methods="get">
+                <button title="Thêm mới sản phẩm"
+                        class="btn btn-primary">
+                    <i class="fa-solid fa-plus"></i></button>
+            </a>
+        </div>
+        <form th:action="@{/document}" method="get" class="navbar-form navbar-right">
+            <div class="input-group">
+                <div class="form-outline">
+                    <input id="search-input" type="search" name="searchName" th:value="${searchName}"
+                           placeholder="Tên Tài Liệu" class="form-control"/>
+                </div>
+                <button id="search-button" type="submit" class="btn btn-primary">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </form>
+    </nav>
+    <div class="container-fluid">
+        <table class="table table-hover" style="text-align: center">
+            <tr>
+                <th>STT</th>
+                <th>Tên Tài Liệu</th>
+                <th>Mô Tả Tài Liệu</th>
+                <th hidden>Status</th>
+                <th>Chức Năng</th>
+
+
+            </tr>
+            <tr th:each="document,status:${documentPageDto}">
+                <td style="width: 3%" th:text="${status.count}"></td>
+                <td style="width: 15%" th:text="${document.getName()}"></td>
+                <td style="width: 15%" th:text="${document.getDescription()}"></td>
+                <td hidden th:text="${document.getStatus()}"></td>
+                <td style="width: 15%"><a th:href="@{/document/edit/{id}(id=${document.getId()})}">
+                    <button class="btn btn-primary">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </button>
+                </a>
+                    <a th:href="@{/document/detail/{id}(id=${document.getId()})}">
+                        <button class="btn btn-primary"><i
+                                class="fa-solid fa-circle-info"></i></button>
+                    </a>
+                    <button type="button" class="btn btn-danger"
+                            data-bs-toggle="modal"
+                            data-bs-target="#exampleModal"
+                            th:attr="onclick= |confirmDelete('${document.name}','${document.id}')|">
+                        <i class="fa-regular fa-trash-can"></i>
+                    </button>
+                </td>
+            </tr>
+        </table>
+        <div th:if="${documentPageDto.totalPages>1}" class="col-md-12 mb-3 mt-3">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center mb-0">
+                    <li th:class="${!documentPageDto.hasPrevious()}?'page-item disabled' : 'page-item'">
+                        <a class="page-link"
+                           th:href="@{/document(page=0,searchName=${searchName})}">
+                            <small>
+                                <i class="fa-solid fa-backward-fast"></i>
+                            </small>
+                        </a>
+                    </li>
+                    <li th:class="${!documentPageDto.hasPrevious()}?'page-item disabled' : 'page-item'">
+                        <a class="page-link"
+                           th:href="@{/document(page=${documentPageDto.number -1},searchName=${searchName})}">
+                            <small>
+                                <i class="fa-solid fa-backward-step"></i>
+                            </small>
+                        </a>
+                    </li>
+                    <li class="page-item active">
+                        <a href="#" class="page-link">
+                            <span th:text="${documentPageDto.number +1}"></span>/<span
+                                th:text="${documentPageDto.totalPages}"></span>
+                        </a>
+                    </li>
+                    <li th:class="${!documentPageDto.hasNext()}?'page-item disabled' : 'page-item'">
+                        <a class="page-link"
+                           th:href="@{/document(page=${documentPageDto.number+1},searchName=${searchName})}">
+                            <small>
+                                <i class="fa-solid fa-forward-step"></i>
+                            </small>
+                        </a>
+                    </li>
+                    <li th:class="${!documentPageDto.hasNext()}?'page-item disabled' : 'page-item'">
+                        <a class="page-link"
+                           th:href="@{/document(page=${documentPageDto.totalPages -1},searchName=${searchName})}">
+                            <small>
+                                <i class="fa-solid fa-forward-fast"></i>
+                            </small>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+<!------------------------------->
+<!-- Modal xóa-->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="document/delete" method="get">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"><b>Xóa</b></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Bạn muốn xóa tài liệu:
+                        <span id="documentName"></span></p>
+                    <input type="text" hidden="hidden" name="id" id="id">
+                    <p style="color: red"><b>Lưu ý:</b> Hoạt động này không thể hoàn tác! </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Thoát</button>
+                    <button type="submit" class="btn btn-primary">Xác nhận</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-------------------------Toast-------------------------------------------------------------->
+<div class="toast-container">
+    <div style="border-radius: 20%;border:2px solid #17a2b8;" id="liveToast" class="toast" role="alert"
+         aria-live="assertive" aria-atomic="true">
+        <div style="background-color: #00394f;border-radius: 22%;border-top-color:#17a2b8;border: 2px "
+             class="toast-header justify-content-center">
+            <h4 style="color: white;text-align: center">
+                Thông báo
+            </h4>
+        </div>
+        <div class="toast-body text-info justify-content-center" style="align-content: center">
+            <p style="text-align: center" th:text="${msg}">
+            </p>
+        </div>
+    </div>
+</div>
+<!-------------------------End Toast-------------------------------------------------------------->
+<div th:replace="layout::footer"></div>
+</body>
+<script th:if="${msg!=null}">
+    // toast
+    window.onload = function () {
+        let myAlert = document.getElementById('liveToast');//select id of toast
+        let bsAlert = new bootstrap.Toast(myAlert);//inizialize it
+        bsAlert.show();//show it
+    }
+</script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+<script src="../lib/easing/easing.min.js"></script>
+<script src="../lib/owlcarousel/owl.carousel.min.js"></script>
+<script src="../lib/isotope/isotope.pkgd.min.js"></script>
+<script src="../lib/lightbox/js/lightbox.min.js"></script>
+<!-- Contact Javascript File -->
+<script src="../mail/jqBootstrapValidation.min.js"></script>
+<script src="../mail/contact.js"></script>
+<!-- Template Javascript -->
+<script src="../js/main.js"></script>
+<!--offline-->
+<script src="../../static/mail/contact.js"></script>
+<script src="../../static/mail/jqBootstrapValidation.min.js"></script>
+<script src="../../static/lib/lightbox/js/lightbox.min.js"></script>
+<script src="../../static/lib/isotope/isotope.pkgd.min.js"></script>
+<script src="../../static/lib/owlcarousel/owl.carousel.min.js"></script>
+<script src="../../static/lib/easing/easing.min.js"></script>
+<script src="../../static/js/main.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script th:src="@{/bootstrap-5.0.2-dist/js/bootstrap.bundle.js}"
+        src="../static/bootstrap-5.0.2-dist/js/bootstrap.bundle.js"></script>
+
+<script>
+    //delete modal
+    function confirmDelete(name, id) {
+        document.getElementById("documentName").innerText = name;
+        document.getElementById("id").value = id;
+    }
+</script>
+
+</html>
+<!--th:href="@{document/delete/{id}(id=${document.getId()})}"-->
